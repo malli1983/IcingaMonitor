@@ -33,7 +33,7 @@ are going to use root home directory.
 
 ```
 $ cd ~root/
-$ git clone https://github.com/malli2017/cross_IcingaMonitor.git
+$ git clone https://github.com/malli2017/IcingaMonitor.git
 ```
 
 ## Ansible Ping Test
