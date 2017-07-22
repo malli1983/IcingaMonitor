@@ -42,7 +42,7 @@ test ansible connection.
 
 ```
 # pwd
-/root/cross_IcingaMonitor/Ansible
+/root/IcingaMonitor/Ansible
 
 # ansible all -m ping
 
