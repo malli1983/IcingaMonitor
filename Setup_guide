@@ -1,15 +1,15 @@
 # Table of Contents
 
-1. [Introduction](#introduction)
-2. [Premisses](#premisses)
-3. [Installation Procedure](#installation-procedure)
-  1. [Clone Git](#clone-git)
-  2. [Ansible Ping Test](#ansible-ping-test)
-  3. [Running Ansible](#running-ansible)
-  4. [MySQL Remote Connection](#mysql-remote-connection)
-  5. [Icinga Database](#icinga-database)
-  6. [Icinga Plugins](#icinga-plugins) 
-  7. [Starting Icinga Daemon](#starting-icinga-daemon)
+1. Introduction
+2. Prerequesits 
+3. Installation Procedure
+  1. Clone Git
+  2. Ansible Ping Test 
+  3. Running Ansible
+  4. MySQL Remote Connection
+  5. Icinga Database
+  6. Icinga Plugins
+  7. Starting Icinga Daemon
 
 # Introduction
 This documentation refers to the installation and configuration of a MySQL and an 
