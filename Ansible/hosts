@@ -1,2 +1,2 @@
 [nodes]
-localhost ansible_ssh_private_key_file=/home/centos/.ssh/id_rsa
+54.234.127.205 asible_ssh_user=centos ansible_ssh_public_key_file=/Home/centos/authorized_keys.pub
