@@ -1,2 +1,2 @@
-[nodes]
-54.234.127.205 asible_ssh_user=centos ansible_ssh_public_key_file=/Home/centos/authorized_keys.pub
+default ansible_ssh_host=34.200.113.205 ansible_ssh_port=2222 ansible_ssh_user='centos'=/home/centos/.ssh/authorized_keys
+
