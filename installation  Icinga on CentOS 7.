@@ -1,0 +1,151 @@
+This guide will show you how to install Icinga on CentOS 7.
+
+1. Installing Pre-Requirements
+
+Before installing Icinga you need to download a number of pre-required packages, mainly the Apache web server, libraries needed to compile the source and tools needed for the web interface and network monitoring. You can install them using yum like this:
+
+# yum install httpd gcc glibc glibc-common gd gd-devel
+# yum install libjpeg libjpeg-devel libpng libpng-devel
+# yum install net-snmp net-snmp-devel net-snmp-utils
+2. Create user and group
+
+You will have to add the icinga user to the system so we don’t have to run it as root:
+
+# useradd icinga
+And a new icingacmd group that will allow us to run external commands via the web interface:
+
+# groupadd icinga-cmd
+# usermod -a -G icinga-cmd icinga
+# usermod -a -G icinga-cmd apache
+3. Download Icinga and the Plugins
+
+Create a new directory to store the downloaded packages:
+
+# mkdir ~/icinga
+# cd ~/icinga
+The latest versions of Icinga and Plugins packages can be found on the following websites:
+
+Icinga - https://github.com/Icinga/icinga-core/releases
+Nagios Plugins - http://nagios-plugins.org/downloads/
+You can use wget to download the files:
+
+# wget https://github.com/Icinga/icinga-core/releases/download/v1.11.5/icinga-1.11.5.tar.gz
+# wget http://www.nagios-plugins.org/download/nagios-plugins-2.0.3.tar.gz
+And then extract the files with tar:
+
+# tar zxvf icinga-1.11.5.tar.gz
+# tar zxvf nagios-plugins-2.0.3.tar.gz
+4. Compile and install Icinga
+
+Now change to the Icinga directory and run the configuration file
+
+# cd icinga-1.11.5
+# ./configure --with-command-group=icinga-cmd --disable-idoutils
+You should get the following output:
+
+*** Configuration summary for icinga-core 1.11.5 06-20-2014 ***:
+
+General Options:
+-------------------------
+Icinga executable: icinga
+Icinga user/group: icinga,icinga
+Command user/group: icinga,icinga-cmd
+Apache user/group: apache,apache
+Embedded Perl: no
+Event Broker: yes
+Enable compressed logs: yes
+Enable Performance Data: no
+Build IDOUtils: no
+Install ${prefix}: /usr/local/icinga
+Lock file: ${prefix}/var/icinga.lock
+Temp file: /tmp/icinga.tmp
+Chk file: ${prefix}/var/icinga.chk
+HTTP auth file: ${prefix}/etc/htpasswd.users
+Lib directory: ${exec_prefix}/lib
+Bin directory: ${exec_prefix}/bin
+Plugin directory: ${exec_prefix}/libexec
+Eventhandler directory: ${exec_prefix}/libexec/eventhandlers
+Log directory: ${prefix}/var
+Check result directory: ${prefix}/var/spool/checkresults
+Temp directory: /tmp
+State directory: ${prefix}/var
+Ext Cmd file directory: ${prefix}/var/rw
+Init directory: /etc/rc.d/init.d
+Apache conf.d directory: /etc/httpd/conf.d
+Apache config file: /etc/httpd/conf.d/icinga.conf
+Mail program: /usr/bin/mail
+Host OS: linux-gnu
+Environment Prefix: ICINGA_
+
+Web Interface Options:
+------------------------
+HTML URL: http://localhost/icinga/
+CGI URL: http://localhost/icinga/cgi-bin/
+Main URL: http://localhost/icinga/cgi-bin/tac.cgi
+
+Review the options above for accuracy. If they look okay,
+type 'make all' to compile the main program and CGIs.
+Next we need to compile and install the Icinga files with the following commands:
+
+# make all
+# make fullinstall
+# make install-config
+5. Change admin email address
+
+With your favorite text editor you need to open /usr/local/icinga/etc/objects/contacts.cfg and modify the email field from icinga@localhost to the email address where you wish to receive notifications.
+
+# vim /usr/local/icinga/etc/objects/contacts.cfg
+And the configure file should look like this:
+
+define contact{
+contact_name icingaadmin ; Short name of user
+use generic-contact ; Inherit default values from generic-contact template (defined above)
+alias Icinga Admin ; Full name of user
+
+email icinga@localhost ; <<***** CHANGE THIS TO YOUR EMAIL ADDRESS ******
+}
+6. Install and configure the classic web components
+
+To compile and install the classic web interface run the following commands:
+
+# make cgis
+# make install-cgis
+# make install-html
+# make install-webconf
+And we need to setup the password for the user icingaadmin. This username will be used to access the web interface so it is important to remember the password that you will input here. Set the password running the following command and enter the password twice:
+
+# htpasswd -c /usr/local/icinga/etc/htpasswd.users icingaadmin
+New password:
+Re-type new password:
+Adding password for user icingaadmin
+Restart Apache for the settings to take effect:
+
+# systemctl start httpd.service
+7. Install the Plugins
+
+Now it’s time to install the Plugins by running the following commands:
+
+# cd ~/icinga/nagios-plugins-2.0.3
+# ./configure --prefix=/usr/local/icinga --with-cgiurl=/icinga/cgi-bin --with-nagios-user=icinga --with-nagios-group=icinga
+# make
+# make install
+8. Make Icinga run on system boot
+
+First verify that the configuration file has no errors running the following command:
+# /usr/local/icinga/bin/icinga -v /usr/local/icinga/etc/icinga.cfg
+And you should get an output:
+
+Total Warnings: 0
+Total Errors: 0
+
+Things look okay - No serious problems were detected during the pre-flight check
+If everything is fine add the service to run on boot with this commands:
+
+# chkconfig --add icinga
+# chkconfig --level 35 icinga on
+And start the service with the following command:
+# systemctl start icinga.service
+9. The web interface
+
+Now that everything is installed and running you can access the web interface with a browser either by using the address http://localhost/icinga if you are doing so from the local computer or by using the address http://SERVER-IP/icinga if you are accessing it from a remote computer.
+When prompted for username and password you will introduce the username “icingaadmin” and the password that you entered in step 6. In case you forget this password you can modify it by rerunning the htpasswd command in step 6.
