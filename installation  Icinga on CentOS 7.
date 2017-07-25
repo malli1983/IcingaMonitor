@@ -149,3 +149,10 @@ And start the service with the following command:
 
 Now that everything is installed and running you can access the web interface with a browser either by using the address http://localhost/icinga if you are doing so from the local computer or by using the address http://SERVER-IP/icinga if you are accessing it from a remote computer.
 When prompted for username and password you will introduce the username “icingaadmin” and the password that you entered in step 6. In case you forget this password you can modify it by rerunning the htpasswd command in step 6.
+If the web interface doesn't work check if SELinux is in enforcing mode by running:
+
+# getenforce
+Enforcing
+If it is set it to permissive like this:
+
+# setenforce 0
