@@ -5,17 +5,17 @@
   become_user: root
   vars:
     password: $1$xyz$2Tf39Fny2BJdNPuwf7opJ.
-    base_dir: "{{ BASE_DIR|default('/home/abaruchi/') }}"
+    base_dir: "{{ BASE_DIR|default('/home/centos/') }}"
     icinga_conf: '/etc/icinga/conf.d'
 
   tasks:
     - name: Add user abaruchi in all hosts
       user: name=abaruchi shell=/bin/bash comment="Master User" password={{password}}
 
-    - name: Adding abaruchi to sudoers
+    - name: Adding centos to sudoers
       lineinfile: dest=/etc/sudoers
         backup=yes
-        line='abaruchi	ALL=(ALL)	ALL'
+        line='centos	ALL=(ALL)	ALL'
         state=present
 
     - name: Allow SSH connections with password
@@ -40,14 +40,14 @@
       service: name=sshd pattern=/usr/sbin/sshd state=reloaded
 
     - name: Clonning GIT repo
-      git: repo=https://github.com/abaruchi/IcingaMonitor.git dest={{ base_dir }}/IsingaMonitor/
+      git: repo=https://github.com/malli2017/IcingaMonitor.git dest={{ base_dir }}/IsingaMonitor/
     
     - name: Adjust Timezone to SaoPaulo in CentOS 6
       file:
-        src: /usr/share/zoneinfo/America/Sao_Paulo
+        src: /usr/share/zoneinfo/America/California
         dest: /etc/localtime
         state: link
-      when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "6")
+      when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
 
     - name: Install packages from yum repos
       yum: name={{ item }} state=latest update_cache=no
