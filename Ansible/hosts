@@ -1,2 +1,1 @@
-default ansible_ssh_host=34.200.113.205 ansible_ssh_port=2222 ansible_ssh_user='centos'=/home/centos/.ssh/authorized_keys
-
+default ansible_ssh_host=54.183.218.214 ansible_ssh_port=2222 ansible_ssh_user='centos'=/home/centos/.ssh/authorized_keys
