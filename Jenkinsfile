@@ -3,7 +3,10 @@ pipeline {
   stages {
     stage('test1') {
       steps {
-        sh 'cd mkdir malli'
+        sh '''cd mkdir malli
+
+
+'''
       }
     }
   }
